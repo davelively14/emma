@@ -16,7 +16,7 @@ config :emma, EmmaWeb.Endpoint,
   secret_key_base: "8sExp7NtLS/tvbIKD0R+oYw6Cl/0RFygazd39jhnGN50VC0YqBC4yXQIrmdvys/C",
   render_errors: [view: EmmaWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Emma.PubSub, adapter: Phoenix.PubSub.PG2],
-  live_view: [signing_salt: "q5O8kn62"]
+  live_view: [signing_salt: "Ntkt+sdvpwD2s8xwvqZTCv+oCbbYl+Gp"]
 
 # Configures Elixir's Logger
 config :logger, :console,
