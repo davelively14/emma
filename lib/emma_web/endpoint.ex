@@ -7,12 +7,14 @@ defmodule EmmaWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_emma_key",
-    signing_salt: "HlhZdD4H"
+    signing_salt: "wSWV/7PphgqCyugqrd0baOm1JVeBBBPt"
   ]
 
   socket "/socket", EmmaWeb.UserSocket,
     websocket: true,
     longpoll: false
+
+  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
