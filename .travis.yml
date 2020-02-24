@@ -4,7 +4,7 @@ elixir:
 otp_release:
   - 22.2
 addons:
-  - postgresql: 12
+  - postgresql: "12"
 env:
   - MIX_ENV=test
 script:
