@@ -16,3 +16,6 @@ config :emma, EmmaWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Reduce complexity to speed up tests. Only use this config in test.
+config :argon2_elixir, t_cost: 1, m_cost: 8
