@@ -61,19 +61,31 @@ defmodule Emma.AdminTest do
   end
 
   describe "get_user/1" do
-    test "returns expected user" do
+    test "returns expected user when provided integer id" do
       [user] = insert_users(1)
 
       assert user == Admin.get_user(user.id)
+    end
+
+    test "returns expected user when provided string parsable as id" do
+      [user] = insert_users(1)
+
+      assert user == Admin.get_user(to_string(user.id))
     end
 
     test "returns nil if user does not exist" do
       assert nil == Admin.get_user(-1)
     end
 
-    test "does not accept integer as string" do
+    test "raises cast error if non-integer string provided" do
+      assert_raise Ecto.Query.CastError, fn ->
+        Admin.get_user("1ds")
+      end
+    end
+
+    test "raises function clause error if non-parsable integer passed as arg" do
       assert_raise FunctionClauseError, fn ->
-        Admin.get_user("1")
+        Admin.get_user(%{id: 1})
       end
     end
   end

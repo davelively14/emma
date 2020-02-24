@@ -27,8 +27,8 @@ defmodule Emma.Admin do
 
   def delete_user(%User{} = already_deleted_user), do: {:ok, already_deleted_user}
 
-  @spec get_user(integer()) :: User.t() | nil
-  def get_user(id) when is_integer(id) do
+  @spec get_user(integer() | String.t()) :: User.t() | nil
+  def get_user(id) when is_integer(id) or is_bitstring(id) do
     Repo.get(User, id)
   end
 end
