@@ -1,13 +1,12 @@
 defmodule Emma.AdminTest do
   use Emma.DataCase, async: true
-  # import Ecto.Query, only: [from: 2]
-  alias Emma.Admin
+  alias Test.Support.Admin.UserFactory
+  alias Emma.{Admin, Repo}
   alias Emma.Admin.User
-  alias Emma.Repo
 
   describe "list_active_users/1" do
     test "returns only active users" do
-      [first_user | rest_of_users] = insert_users(4)
+      [first_user | rest_of_users] = UserFactory.insert_generic_users(4)
 
       first_user
       |> User.changeset(%{deleted_at: DateTime.utc_now()})
@@ -46,14 +45,14 @@ defmodule Emma.AdminTest do
 
   describe "delete_user/1" do
     test "marks user as deleted" do
-      [user] = insert_users(1)
+      [user] = UserFactory.insert_generic_users(1)
 
       assert {:ok, deleted_user} = Admin.delete_user(user)
       assert !is_nil(deleted_user.deleted_at)
     end
 
     test "is idempotent" do
-      [user] = insert_users(1)
+      [user] = UserFactory.insert_generic_users(1)
 
       {:ok, deleted_user} = Admin.delete_user(user)
       assert {:ok, deleted_user} == Admin.delete_user(deleted_user)
@@ -62,13 +61,13 @@ defmodule Emma.AdminTest do
 
   describe "get_user/1" do
     test "returns expected user when provided integer id" do
-      [user] = insert_users(1)
+      [user] = UserFactory.insert_generic_users(1)
 
       assert user == Admin.get_user(user.id)
     end
 
     test "returns expected user when provided string parsable as id" do
-      [user] = insert_users(1)
+      [user] = UserFactory.insert_generic_users(1)
 
       assert user == Admin.get_user(to_string(user.id))
     end
@@ -88,15 +87,5 @@ defmodule Emma.AdminTest do
         Admin.get_user(%{id: 1})
       end
     end
-  end
-
-  # Private
-
-  defp insert_users(num) do
-    Enum.map(1..num, fn index ->
-      %{email: "email#{index}@gm.net", password: "asdfqwer#{index}"}
-      |> User.changeset()
-      |> Repo.insert!()
-    end)
   end
 end
