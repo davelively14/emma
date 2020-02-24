@@ -3,7 +3,17 @@ elixir:
   - 1.10
 otp_release:
   - 22.2
+addons:
+  - postgresql: 12
+services:
+  - postgresql
+env:
+  - MIX_ENV=test
 before_script:
+  - psql --version
+  - psql -c "CREATE ROLE postgres WITH CREATEDB PASSWORD 'postgres'"
+  - psql -c "create database emma_test"
   - mix deps.get
+  - mix ecto.migrate
 script:
   - mix test
