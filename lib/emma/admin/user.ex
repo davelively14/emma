@@ -19,11 +19,11 @@ defmodule Emma.Admin.User do
     [:deleted_at | required_attributes()]
   end
 
-  def changeset(attrs) when is_map(attrs), do: changeset(%User{}, attrs)
+  def changeset(params) when is_map(params), do: changeset(%User{}, params)
 
-  def changeset(%User{} = user \\ %User{}, attrs) do
+  def changeset(%User{} = user \\ %User{}, params) do
     user
-    |> cast(attrs, allowed_attributes())
+    |> cast(params, allowed_attributes())
     |> validate_required(required_attributes())
     |> validate_format(:email, ~r/.+\@.+\..+/)
     |> validate_length(:password, min: 8, max: 100)
