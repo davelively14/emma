@@ -4,9 +4,39 @@ defmodule Emma.AdminTest do
   alias Emma.{Admin, Repo}
   alias Emma.Admin.User
 
+  describe "get_user/1" do
+    test "returns expected user when provided integer id" do
+      user = UserFactory.insert_user()
+
+      assert user == Admin.get_user(user.id)
+    end
+
+    test "returns expected user when provided string parsable as id" do
+      user = UserFactory.insert_user()
+
+      assert user == Admin.get_user(to_string(user.id))
+    end
+
+    test "returns nil if user does not exist" do
+      assert nil == Admin.get_user(-1)
+    end
+
+    test "raises cast error if non-integer string provided" do
+      assert_raise Ecto.Query.CastError, fn ->
+        Admin.get_user("1ds")
+      end
+    end
+
+    test "raises function clause error if non-parsable integer passed as arg" do
+      assert_raise FunctionClauseError, fn ->
+        Admin.get_user(%{id: 1})
+      end
+    end
+  end
+
   describe "list_active_users/1" do
     test "returns only active users" do
-      [first_user | rest_of_users] = UserFactory.insert_generic_users(4)
+      [first_user | rest_of_users] = UserFactory.insert_users(4)
 
       first_user
       |> User.changeset(%{deleted_at: DateTime.utc_now()})
@@ -45,47 +75,37 @@ defmodule Emma.AdminTest do
 
   describe "delete_user/1" do
     test "marks user as deleted" do
-      [user] = UserFactory.insert_generic_users(1)
+      user = UserFactory.insert_user()
 
       assert {:ok, deleted_user} = Admin.delete_user(user)
       assert !is_nil(deleted_user.deleted_at)
     end
 
     test "is idempotent" do
-      [user] = UserFactory.insert_generic_users(1)
+      user = UserFactory.insert_user()
 
       {:ok, deleted_user} = Admin.delete_user(user)
       assert {:ok, deleted_user} == Admin.delete_user(deleted_user)
     end
   end
 
-  describe "get_user/1" do
-    test "returns expected user when provided integer id" do
-      [user] = UserFactory.insert_generic_users(1)
+  describe "authenticate/2" do
+    test "returns user when authenticated" do
+      password = "asdf1234"
+      user = UserFactory.insert_user(password: password)
 
-      assert user == Admin.get_user(user.id)
+      assert {:ok, user} == Admin.authenticate(user.email, password)
     end
 
-    test "returns expected user when provided string parsable as id" do
-      [user] = UserFactory.insert_generic_users(1)
-
-      assert user == Admin.get_user(to_string(user.id))
+    test "returns :invalid_credentials error if user does not exist for email" do
+      assert {:error, :invalid_credentials} == Admin.authenticate("not an email", "password")
     end
 
-    test "returns nil if user does not exist" do
-      assert nil == Admin.get_user(-1)
-    end
+    test "returns :invalid_credentials error if password is incorrect" do
+      password = "asdf1234"
+      user = UserFactory.insert_user(password: password)
 
-    test "raises cast error if non-integer string provided" do
-      assert_raise Ecto.Query.CastError, fn ->
-        Admin.get_user("1ds")
-      end
-    end
-
-    test "raises function clause error if non-parsable integer passed as arg" do
-      assert_raise FunctionClauseError, fn ->
-        Admin.get_user(%{id: 1})
-      end
+      assert {:error, :invalid_credentials} == Admin.authenticate(user.email, "#{password}+1")
     end
   end
 end
