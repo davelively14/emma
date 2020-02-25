@@ -12,7 +12,7 @@ before_install:
   - sudo service postgresql restart 12
 before_script:
   - psql --version
-  - sudo -u postgres createuser travis
+  - sudo -u postgres createuser travis -p 5433
   - cp config/test.travis.exs config/test.exs
 script:
   - mix test
