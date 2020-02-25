@@ -2,7 +2,6 @@ use Mix.Config
 
 # Configure your database
 config :emma, Emma.Repo,
-  username: "travis",
   database: "emma_test_travis",
   hostname: "localhost",
   port: 5433,
