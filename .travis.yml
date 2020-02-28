@@ -9,8 +9,5 @@ services:
   - postgresql
 env:
   - MIX_ENV=test
-before_script:
-  - psql --version
-  - psql -c "CREATE ROLE postgres WITH CREATEDB PASSWORD 'postgres'"
 script:
   - mix test
