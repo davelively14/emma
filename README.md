@@ -1,5 +1,7 @@
 # Emma
 
+[![Build Status](https://travis-ci.org/davelively14/emma.svg?branch=master)](https://travis-ci.org/davelively14/emma)
+
 TODO:
 
 - Add description
