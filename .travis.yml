@@ -4,12 +4,11 @@ elixir:
 otp_release:
   - 22.2
 addons:
-  - postgres: "12"
+  - postgres: 12
 env:
   - MIX_ENV=test
 before_script:
   - psql --version
-  - psql -c "CREATE ROLE postgres WITH CREATEDB PASSWORD 'postgres'" -p 5433
-  - cp config/test.travis.exs config/test.exs
+  - psql -c "CREATE ROLE postgres WITH CREATEDB PASSWORD 'postgres'"
 script:
   - mix test
