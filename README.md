@@ -1,6 +1,6 @@
 # Emma
 
-[![Build Status](https://travis-ci.org/davelively14/emma.svg?branch=master)](https://travis-ci.org/davelively14/emma) [![Coverage Status](https://coveralls.io/repos/github/davelively14/emma/badge.svg?branch=dl-add-coveralls)](https://coveralls.io/github/davelively14/emma?branch=dl-add-coveralls)
+[![Build Status](https://travis-ci.org/davelively14/emma.svg?branch=master)](https://travis-ci.org/davelively14/emma) [![Coverage Status](https://coveralls.io/repos/github/davelively14/emma/badge.svg?branch=master)](https://coveralls.io/github/davelively14/emma?branch=master)
 
 TODO:
 
