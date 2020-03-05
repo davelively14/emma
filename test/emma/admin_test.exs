@@ -87,6 +87,17 @@ defmodule Emma.AdminTest do
       {:ok, deleted_user} = Admin.delete_user(user)
       assert {:ok, deleted_user} == Admin.delete_user(deleted_user)
     end
+
+    test "will delete same user multiple times" do
+      first_user = UserFactory.insert_user()
+
+      Admin.delete_user(first_user)
+
+      second_user = UserFactory.insert_user()
+
+      assert {:ok, deleted_user} = Admin.delete_user(second_user)
+      assert !is_nil(deleted_user.deleted_at)
+    end
   end
 
   describe "authenticate/2" do
