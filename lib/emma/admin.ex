@@ -39,4 +39,10 @@ defmodule Emma.Admin do
     |> Auth.get_user_by_email()
     |> Auth.verify_user(password)
   end
+
+  @spec user_changeset() :: Ecto.Changeset.t()
+  def user_changeset, do: User.changeset(%{})
+
+  @spec user_changeset(user :: User.t()) :: Ecto.Changeset.t()
+  def user_changeset(params) when is_map(params), do: User.changeset(params)
 end

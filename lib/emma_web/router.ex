@@ -17,6 +17,9 @@ defmodule EmmaWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/app", AppController, :index
+    get "/login", AdminController, :login
+    get "/create_user", AdminController, :create_user
   end
 
   # Other scopes may use custom stacks.

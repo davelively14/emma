@@ -119,4 +119,30 @@ defmodule Emma.AdminTest do
       assert {:error, :invalid_credentials} == Admin.authenticate(user.email, "#{password}+1")
     end
   end
+
+  describe "user_changeset/0" do
+    test "returns user changeset with no changes" do
+      assert %Ecto.Changeset{changes: %{}} = Admin.user_changeset()
+    end
+
+    test "returns user changeset that is invalid" do
+      assert %Ecto.Changeset{valid?: false} = Admin.user_changeset()
+    end
+  end
+
+  describe "user_changeset/1" do
+    test "returns user changeset with allowed params applied" do
+      params = %{"email" => "d@gma.com", "password" => "asdf1234"}
+
+      assert %Ecto.Changeset{changes: changes, valid?: true} = Admin.user_changeset(params)
+      assert changes.email == params["email"]
+      assert changes.password
+    end
+
+    test "raises function clause error if params not map" do
+      assert_raise FunctionClauseError, fn ->
+        Admin.user_changeset("params")
+      end
+    end
+  end
 end
