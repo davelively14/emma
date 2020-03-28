@@ -6,7 +6,7 @@
         <%= link "Login", to: Routes.admin_path(@conn, :login) %>
       </div>
       <div class="col-sm-4">
-        <%= link "Create User", to: Routes.admin_path(@conn, :login) %>
+        <%= link "Create User", to: Routes.admin_path(@conn, :create_user) %>
       </div>
     </div>
   </div>
