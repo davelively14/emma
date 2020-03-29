@@ -145,4 +145,45 @@ defmodule Emma.AdminTest do
       end
     end
   end
+
+  describe "sign_in/2" do
+    setup :provide_conn
+
+    test "returns conn with guardian authentication included", %{conn: conn} do
+      conn
+      |> Admin.sign_in(UserFactory.insert_user())
+      |> Admin.Auth.Guardian.Plug.authenticated?()
+      |> assert()
+    end
+  end
+
+  describe "sign_out/1" do
+    setup :provide_conn
+
+    test "returns conn with guardian authentication removed", %{conn: conn} do
+      signed_in_conn = Admin.sign_in(conn, UserFactory.insert_user())
+      signed_out_conn = Admin.sign_out(signed_in_conn)
+
+      assert signed_in_conn |> Admin.Auth.Guardian.Plug.authenticated?()
+      refute Admin.Auth.Guardian.Plug.authenticated?(signed_out_conn)
+    end
+
+    test "will return unauthenticated conn if non-auth conn provided", %{conn: conn} do
+      refute conn |> Admin.sign_out() |> Admin.Auth.Guardian.Plug.authenticated?()
+    end
+  end
+
+  describe "get_token_for_user/1" do
+    test "generates and returns guardian access token for a user" do
+      token = UserFactory.insert_user() |> Admin.get_token_for_user()
+
+      assert %JOSE.JWT{fields: %{"typ" => "access"}} = JOSE.JWT.peek(token)
+    end
+  end
+
+  # Setup functions
+
+  defp provide_conn(_) do
+    {:ok, %{conn: %Plug.Conn{}}}
+  end
 end

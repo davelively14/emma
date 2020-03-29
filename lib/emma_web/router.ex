@@ -9,6 +9,15 @@ defmodule EmmaWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :auth do
+    plug Emma.Admin.Auth.Pipeline
+  end
+
+  pipeline :ensure_auth do
+    plug Emma.Admin.Auth.Pipeline
+    plug Guardian.Plug.EnsureAuthenticated
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -17,9 +26,20 @@ defmodule EmmaWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/app", AppController, :index
-    get "/login", AdminController, :login
-    get "/create_user", AdminController, :create_user
+    resources "/session", SessionController, only: [:new, :create]
+    resources "/user", UserController, only: [:new, :create]
+  end
+
+  scope "/", EmmaWeb do
+    pipe_through [:browser, :ensure_auth]
+
+    delete "/session", SessionController, :delete
+  end
+
+  scope "/app", EmmaWeb do
+    pipe_through [:browser, :ensure_auth]
+
+    get "/", AppController, :index
   end
 
   # Other scopes may use custom stacks.

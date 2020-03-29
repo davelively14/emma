@@ -3,10 +3,10 @@
     <p class="display-2">Emma</p>
     <div class="row justify-content-center">
       <div class="col-sm-4">
-        <%= link "Login", to: Routes.admin_path(@conn, :login) %>
+        <%= link "Login", to: Routes.session_path(@conn, :new) %>
       </div>
       <div class="col-sm-4">
-        <%= link "Create User", to: Routes.admin_path(@conn, :create_user) %>
+        <%= link "Create User", to: Routes.user_path(@conn, :new) %>
       </div>
     </div>
   </div>
