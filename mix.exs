@@ -54,6 +54,7 @@ defmodule Emma.MixProject do
       {:guardian, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
       # Test
+      {:floki, "~> 0.26.0", only: :test},
       {:excoveralls, "~> 0.10", only: :test}
     ]
   end

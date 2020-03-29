@@ -1,6 +1,13 @@
-<section class="phx-hero">
-  <article class="column">
-    <h2>Temperature</h2>
-    <%= live_render(@conn, EmmaWeb.LiveView.LandingPage) %>
-  </article>
-</section>
+<div class="container pt-5">
+  <div class="jumbotron text-center">
+    <p class="display-2">Emma</p>
+    <div class="row justify-content-center">
+      <div class="col-sm-4">
+        <%= link "Login", to: Routes.session_path(@conn, :new) %>
+      </div>
+      <div class="col-sm-4">
+        <%= link "Create User", to: Routes.user_path(@conn, :new) %>
+      </div>
+    </div>
+  </div>
+</div>

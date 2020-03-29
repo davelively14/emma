@@ -87,6 +87,17 @@ defmodule Emma.AdminTest do
       {:ok, deleted_user} = Admin.delete_user(user)
       assert {:ok, deleted_user} == Admin.delete_user(deleted_user)
     end
+
+    test "will delete same user multiple times" do
+      first_user = UserFactory.insert_user()
+
+      Admin.delete_user(first_user)
+
+      second_user = UserFactory.insert_user()
+
+      assert {:ok, deleted_user} = Admin.delete_user(second_user)
+      assert !is_nil(deleted_user.deleted_at)
+    end
   end
 
   describe "authenticate/2" do
@@ -107,5 +118,72 @@ defmodule Emma.AdminTest do
 
       assert {:error, :invalid_credentials} == Admin.authenticate(user.email, "#{password}+1")
     end
+  end
+
+  describe "user_changeset/0" do
+    test "returns user changeset with no changes" do
+      assert %Ecto.Changeset{changes: %{}} = Admin.user_changeset()
+    end
+
+    test "returns user changeset that is invalid" do
+      assert %Ecto.Changeset{valid?: false} = Admin.user_changeset()
+    end
+  end
+
+  describe "user_changeset/1" do
+    test "returns user changeset with allowed params applied" do
+      params = %{"email" => "d@gma.com", "password" => "asdf1234"}
+
+      assert %Ecto.Changeset{changes: changes, valid?: true} = Admin.user_changeset(params)
+      assert changes.email == params["email"]
+      assert changes.password
+    end
+
+    test "raises function clause error if params not map" do
+      assert_raise FunctionClauseError, fn ->
+        Admin.user_changeset("params")
+      end
+    end
+  end
+
+  describe "sign_in/2" do
+    setup :provide_conn
+
+    test "returns conn with guardian authentication included", %{conn: conn} do
+      conn
+      |> Admin.sign_in(UserFactory.insert_user())
+      |> Admin.Auth.Guardian.Plug.authenticated?()
+      |> assert()
+    end
+  end
+
+  describe "sign_out/1" do
+    setup :provide_conn
+
+    test "returns conn with guardian authentication removed", %{conn: conn} do
+      signed_in_conn = Admin.sign_in(conn, UserFactory.insert_user())
+      signed_out_conn = Admin.sign_out(signed_in_conn)
+
+      assert signed_in_conn |> Admin.Auth.Guardian.Plug.authenticated?()
+      refute Admin.Auth.Guardian.Plug.authenticated?(signed_out_conn)
+    end
+
+    test "will return unauthenticated conn if non-auth conn provided", %{conn: conn} do
+      refute conn |> Admin.sign_out() |> Admin.Auth.Guardian.Plug.authenticated?()
+    end
+  end
+
+  describe "get_token_for_user/1" do
+    test "generates and returns guardian access token for a user" do
+      token = UserFactory.insert_user() |> Admin.get_token_for_user()
+
+      assert %JOSE.JWT{fields: %{"typ" => "access"}} = JOSE.JWT.peek(token)
+    end
+  end
+
+  # Setup functions
+
+  defp provide_conn(_) do
+    {:ok, %{conn: %Plug.Conn{}}}
   end
 end

@@ -26,7 +26,7 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :emma, Emma.Admin.Guardian,
+config :emma, Emma.Admin.Auth.Guardian,
   issuer: "emma",
   secret_key: "NJOJgapWQfdOAHw1RMVvhfL8uakJFDJnQrpiPbNUyMiLnnwmfvCGkY/GMCm0sn6x"
 

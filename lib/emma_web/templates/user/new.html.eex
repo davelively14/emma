@@ -1,0 +1,21 @@
+<div class="container d-flex h-100">
+  <div class="row align-self-center w-100">
+    <div class="col-6 mx-auto">
+      <div class="jumbotron text-center">
+        <h2>Create User</h2>
+
+        <%= form_for @changeset, Routes.user_path(@conn, :create), fn f -> %>
+          <%= label f, :email %>
+          <%= text_input f, :email %>
+          <%= error_tag f, :email %>
+
+          <%= label f, :password %>
+          <%= password_input f, :password %>
+          <%= error_tag f, :password %>
+
+          <%= submit "Create User" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

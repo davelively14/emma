@@ -39,4 +39,24 @@ defmodule Emma.Admin do
     |> Auth.get_user_by_email()
     |> Auth.verify_user(password)
   end
+
+  @spec user_changeset() :: Ecto.Changeset.t()
+  def user_changeset, do: User.changeset(%{})
+
+  @spec user_changeset(user :: User.t()) :: Ecto.Changeset.t()
+  def user_changeset(params) when is_map(params), do: User.changeset(params)
+
+  @spec sign_in(conn :: Plug.Conn.t(), user :: User.t()) :: Plug.Conn.t()
+  def sign_in(%Plug.Conn{} = conn, %User{} = user), do: Auth.Guardian.Plug.sign_in(conn, user)
+
+  @spec sign_out(conn :: Plug.Conn.t()) :: Plug.Conn.t()
+  def sign_out(%Plug.Conn{} = conn), do: Auth.Guardian.Plug.sign_out(conn)
+
+  @spec get_token_for_user(user :: User.t()) :: String.t() | nil
+  def get_token_for_user(%User{} = user) do
+    case Auth.Guardian.encode_and_sign(user, %{}, token_type: :access) do
+      {:ok, token, _} -> token
+      _ -> nil
+    end
+  end
 end

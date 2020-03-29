@@ -2,9 +2,19 @@
 
 [![Build Status](https://travis-ci.org/davelively14/emma.svg?branch=master)](https://travis-ci.org/davelively14/emma) [![Coverage Status](https://coveralls.io/repos/github/davelively14/emma/badge.svg?branch=master)](https://coveralls.io/github/davelively14/emma?branch=master)
 
-TODO:
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Emma_Nutt_circa_1878-1900.jpg">
+</p>
 
-- Add description
+[Emma Nutt](https://en.wikipedia.org/wiki/Emma_Nutt), the world's first femail telephone operator.
+
+## Description
+
+TODO
+
+## How to Setup
+
+TODO
 
 ## Dev Notes
 
